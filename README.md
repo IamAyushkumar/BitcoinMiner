@@ -58,4 +58,4 @@ i) worker(ip_address) : Creates a node and establishes connection with server no
 *NOTE : This function uses :inet.getif to obtain IP address of local machines. However, with this command position of local IP in result set is not fixed. Depending on it's position, we may have to used hd()/tl()/List.last() to get local IP. Currently hd() is being used.
 
 
-<img src="System Design.png"/>
+<img src="systemdesign.png" width="800" height="600">
