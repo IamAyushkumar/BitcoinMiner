@@ -32,7 +32,7 @@ Ratio: 3.78
 
 The program was able to mine coins with maximum 8 0's. Example of the coin and it's hash is raheenmz;DP2OBxGQ 00000000AF0D63E12AD88D09C03D1D1DBA38D11B243A03DF9BF98193FF75CD8F
 
-Maximum number of machine : 3
+Maximum number of machine/Nodes  : 3
 
 Function description
 
@@ -56,3 +56,6 @@ III) Worker: Contains functions to be run on worker nodes
 
 i) worker(ip_address) : Creates a node and establishes connection with server node which is present on the IP address specified in the argument
 *NOTE : This function uses :inet.getif to obtain IP address of local machines. However, with this command position of local IP in result set is not fixed. Depending on it's position, we may have to used hd()/tl()/List.last() to get local IP. Currently hd() is being used.
+
+
+<img src="System Design.png"/>
