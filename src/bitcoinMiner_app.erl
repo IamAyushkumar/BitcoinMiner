@@ -3,18 +3,19 @@
 %% @end
 %%%-------------------------------------------------------------------
 
--module(BitcoinMiner_app).
--behaviour(application).
--export([start/2, stop/0]).
--define(GATOR_ID, "54666085").
+-module(bitcoinMiner_app).
+-export([start_link/1, stop/0]).
+-export([init/1]).
+-define(GATOR_ID, "akash.kumar;").
 -record(state, {
     randomString,
     minLeadingZeroes
 }).
 
-start(_StartType, _StartArgs) ->
-    Pid = spawn_link(?MODULE, init(), []),
-    register(?MODULE, Pid).
+start_link(N) ->
+    Pid = spawn_link(?MODULE, init,[N]),
+    register(?MODULE, Pid),
+    {ok,Pid}.
 %%    BitcoinMiner_sup:start_link().
 
 stop() ->
@@ -22,15 +23,13 @@ stop() ->
 
 %% internal functions
 
-
-init() ->
+init(Number_of_leading_zero) ->
     String = binary_to_list(base64:encode(crypto:strong_rand_bytes(16))),
-    MinLeadingZeroes = 1,
+    MinLeadingZeroes = Number_of_leading_zero,
     State = #state{randomString = String, minLeadingZeroes = MinLeadingZeroes},
-    main_loop(State),
-    ?MODULE ! {start, self()},
+    main_loop(State), ?MODULE ! {start, self()},
     receive
-        {found, RandomString} -> io:format("Found a bitcoin " + RandomString)
+        {found, RandomString, Sha256} -> io:format([?GATOR_ID|RandomString] ++ " "++Sha256 ++ "\n")
     end.
 
 
@@ -43,15 +42,15 @@ main_loop(#state{
          Sha256 = get_sha_256([?GATOR_ID|RandomString]),
          CurrLeadingZeroes = get_leading_zeroes(Sha256, 0),
             if
-                CurrLeadingZeroes >= MinLeadingZeroes -> CallerPid ! {found, RandomString}
+                CurrLeadingZeroes >= MinLeadingZeroes -> CallerPid ! {found, RandomString, Sha256 }
             end,
             main_loop(State#state{randomString = binary_to_list(base64:encode(crypto:strong_rand_bytes(16))), minLeadingZeroes = MinLeadingZeroes});
         terminate -> exit(normal)
     end.
 
-get_leading_zeroes([H|T], Count) ->
-    case H of
-        "0" -> get_leading_zeroes(T, Count+1);
+get_leading_zeroes([First|Rest], Count) ->
+    case First of
+        "0" -> get_leading_zeroes(Rest, Count+1);
         _ -> Count
 end.
 
