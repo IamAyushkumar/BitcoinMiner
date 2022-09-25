@@ -81,3 +81,9 @@ which inturn relays the message the "foundCoin" message to the Server.
 </pre>
 <h4>System Design for the project:</h4>
 <img src="%20systemdesign.png" width="800" height="600">
+
+<H3> Authors </H3>
+<pre>
+Ayush Kumar (ayushkumar@ufl.edu) <br/>
+Akash Kumar (akashkumar@ufl.edu)
+</pre>
