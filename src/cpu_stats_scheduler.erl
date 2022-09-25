@@ -4,12 +4,19 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 24. Sep 2022 9:54 AM
+%%% Created : 25. Sep 2022 6:32 AM
 %%%-------------------------------------------------------------------
--module(global_server_sup).
+-module(cpu_stats_scheduler).
 -author("ayushkumar").
 
 %% API
--export([]).
+-export([start/0]).
 
 start() ->
+  Time=statistics(scheduler_wall_time),
+  io:format("~w",Time),
+  timer:sleep(500),
+  start().
+
+stop() ->
+  exit(normal).

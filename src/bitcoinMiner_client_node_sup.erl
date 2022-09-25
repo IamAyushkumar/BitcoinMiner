@@ -3,8 +3,8 @@
 %% @end
 %%%-------------------------------------------------------------------
 
--module(bitcoinMiner_client_node).
--export([]).
+-module(bitcoinMiner_client_node_sup).
+-export([start_link/1, stop/0, message_receiver/0, proceed_to_spawn_all_actors/3, spawn_actor_and_listen/2]).
 -define(GATOR_ID, "akashkumar;").
 
 -record(state, {
@@ -28,15 +28,15 @@ message_receiver() ->
     receive
         {startProcessing, SupervisorPid, MinLeadingZeroes} ->
             error_logger:error_msg("actor died, respawning"),
-            spawn_actors(SupervisorPid, 100, MinLeadingZeroes);
+            proceed_to_spawn_all_actors(SupervisorPid, 100, MinLeadingZeroes);
         terminate ->
             stop()
     end,
     message_receiver().
 
-spawn_actors(SupervisorPid, NumActors, K)  when NumActors > 0 ->
+proceed_to_spawn_all_actors(SupervisorPid, NumActors, K)  when NumActors > 0 ->
     spawn(?MODULE, spawn_actor_and_listen, [SupervisorPid, K]),
-    spawn_actors(SupervisorPid, NumActors - 1, K).
+    proceed_to_spawn_all_actors(SupervisorPid, NumActors - 1, K).
 
 spawn_actor_and_listen(SupervisorPid, K) ->
     process_flag(trap_exit, true),
@@ -59,4 +59,4 @@ listen_actor(SupervisorPid, ActorPid, K) ->
 
 
 send_found_message_to_supervisor(SupervisorPid, FinderActorPid, RandomStringUsed, BitcoinGeneratedHash) ->
-    SupervisorPid ! {nodeFoundCoin, self(), FinderActorPid, RandomStringUsed, BitcoinGeneratedHash}.
+    SupervisorPid ! {nodeFoundCoin, self(), RandomStringUsed, BitcoinGeneratedHash}.
