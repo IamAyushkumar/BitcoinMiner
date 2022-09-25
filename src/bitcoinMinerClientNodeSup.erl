@@ -34,7 +34,7 @@ proceed_to_spawn_all_actors(SupervisorPid, NumActors, K)  when NumActors > 0 ->
 
 spawn_actor_and_listen(SupervisorPid, K) ->
     process_flag(trap_exit, true),
-    {ok, ActorPid} = bitcoinMiner_client_actor:start_link(SupervisorPid, K),
+    {ok, ActorPid} = bitcoinMinerClientActor:start_link(SupervisorPid, K),
     ActorPid ! {actorStartProcessing, self()},
     listen_actor(SupervisorPid, ActorPid, K).
 
@@ -42,12 +42,12 @@ listen_actor(SupervisorPid, ActorPid, K) ->
     receive
         {'EXIT', ActorPid, _} ->
             %error_logger:error_msg("actor died, respawning"),
-            {ok, ActorNewPid} = bitcoinMiner_client_actor:start_link(SupervisorPid, K),
+            {ok, ActorNewPid} = bitcoinMinerClientActor:start_link(SupervisorPid, K),
             listen_actor(SupervisorPid, ActorNewPid, K);
         {actorFoundCoin,RandomStringUsed, BitcoinGeneratedHash} ->
             send_found_message_to_supervisor(SupervisorPid, RandomStringUsed, BitcoinGeneratedHash);
         terminate ->
-            bitcoinMiner_client_actor:stop()
+            bitcoinMinerClientActor:stop()
     end,
     listen_actor(SupervisorPid, ActorPid, K).
 

@@ -25,7 +25,7 @@ actor_main_loop(MinLeadingZeroes, SupervisorPid) ->
   %io:format("\n [actor_main_loop] ready to receive."),
   receive
     {actorStartProcessing, CallerPid} ->
-      bitcoin_miner_actor_process:start_link(CallerPid, MinLeadingZeroes, SupervisorPid);
-    terminate ->  bitcoin_miner_actor_process:stop()
+      bitcoinMinerActorProcess:start_link(CallerPid, MinLeadingZeroes, SupervisorPid);
+    terminate ->  bitcoinMinerActorProcess:stop()
   end,
   actor_main_loop(MinLeadingZeroes, SupervisorPid).
