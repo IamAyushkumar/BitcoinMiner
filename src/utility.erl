@@ -7,7 +7,7 @@
 %%% Created : 24. Sep 2022 7:36 AM
 %%%-------------------------------------------------------------------
 -module(utility).
--author("ayushkumar").
+-author("ayushkumar and akashkumar").
 
 %% API
 -export([get_leading_zeroes/2]).

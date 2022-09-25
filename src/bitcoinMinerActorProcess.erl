@@ -6,8 +6,8 @@
 %%% @end
 %%% Created : 25. Sep 2022 4:04 AM
 %%%-------------------------------------------------------------------
--module(bitcoin_miner_actor_process).
--author("ayushkumar").
+-module(bitcoinMinerActorProcess).
+-author("ayushkumar and akashkumar").
 %%-record(state, {minLeadingZeroes, callerPid}).
 -define(GATOR_ID, "ayushakash;").
 
@@ -15,18 +15,18 @@
 -export([start_link/3, stop/0, actor_process_main_loop/3, get_random_string/0, get_leading_zeroes/2, get_sha_256/1]).
 
 start_link(CallerPid, MinLeadingZeroes, SupervisorPid) ->
-  io:format("\nprocess got started"),
+  %io:format("\nprocess got started"),
   actor_process_main_loop(CallerPid, MinLeadingZeroes, SupervisorPid).
 
 stop() ->
   exit(normal).
 
 actor_process_main_loop(CallerPid, MinLeadingZeroes, SupervisorPid) ->
-  io:format("\nstarting main_loop of process."),
+  %io:format("\nstarting main_loop of process."),
   RandomString = get_random_string(),
   Sha256 = get_sha_256([?GATOR_ID| RandomString]),
   CurrLeadingZeroes = get_leading_zeroes(Sha256, 0),
-  if CurrLeadingZeroes >= MinLeadingZeroes -> CallerPid ! {actorFoundCoin, SupervisorPid, self(), RandomString, Sha256};
+  if CurrLeadingZeroes >= MinLeadingZeroes -> CallerPid ! {actorFoundCoin, RandomString, Sha256};
   true -> io:format("\n Couldn't find")
   end,
   actor_process_main_loop(CallerPid, MinLeadingZeroes, SupervisorPid).

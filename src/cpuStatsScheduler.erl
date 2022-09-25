@@ -6,12 +6,12 @@
 %%% @end
 %%% Created : 25. Sep 2022 6:32 AM
 %%%-------------------------------------------------------------------
--module(cpu_stats_scheduler).
--author("ayushkumar").
+-module(cpuStatsScheduler).
+-author("ayushkumar and akashkumar").
 
 %% API
 -export([start/0]).
-
+-export([stop/0]).
 start() ->
   Time=statistics(scheduler_wall_time),
   io:format("~w",Time),
